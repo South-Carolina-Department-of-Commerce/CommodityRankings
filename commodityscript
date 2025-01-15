@@ -1,0 +1,74 @@
+import pandas
+dataset = pandas.read_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\CommodityExports.csv" )
+print(dataset)
+
+import pandas as pd
+
+southeast_states = ['South Carolina', 'North Carolina', 'Georgia', 'Florida', 'Alabama', 'Mississippi', 'Louisiana', 'Arkansas', 'Tennessee', 'Kentucky', 'Virginia']
+eastern_states = [
+    "Connecticut", "Delaware", "Florida", "Georgia", "Maine", "Maryland",
+    "Massachusetts", "New Hampshire", "New Jersey", "New York", "North Carolina",
+    "Rhode Island", "South Carolina", "Virginia", "West Virginia", "Pennsylvania",
+    "Vermont"
+]
+
+
+rank_df =pd.DataFrame({'Rank': range(1, 51)})
+for commodity in dataset.columns[1:-2]:  # Exclude 'State', 'IsSoutheastern', and 'IsEastern'
+    ranked_states = dataset[['State', commodity]].sort_values(by=commodity, ascending=False).reset_index(drop=True)
+    rank_df[commodity] = ranked_states['State']
+
+print(rank_df)
+
+def create_region_ranking(df, region_column):
+    region_df = df[df[region_column] == 1].copy()
+
+    rank_df = pd.DataFrame({'Rank': range(1, len(region_df) + 1)})
+
+    for commodity in region_df.columns[1:-2]:
+        ranked_states = region_df[['State', commodity]].sort_values(by=commodity, ascending=False).reset_index(drop=True)
+        rank_df[commodity] = ranked_states['State']
+
+    return rank_df
+
+southeastern_ranking = create_region_ranking(dataset, 'IsSoutheastern')
+eastern_ranking = create_region_ranking(dataset, 'IsEastern')
+print(southeast_ranking)
+print(eastern_ranking)
+
+
+def get_top_ranked_commodities(rank_df, rank_limit):
+    top_commodities = [col for col in rank_df.columns[1:] if 'South Carolina' in rank_df[col][:rank_limit].values]
+    return rank_df[['Rank'] + top_commodities]
+
+# Get commodities with "South Carolina" in the top 10 nationally
+top_10_nationally = get_top_ranked_commodities(rank_df, 10)
+
+# Get commodities with "South Carolina" in the top 3 nationally
+top_3_nationally = get_top_ranked_commodities(rank_df, 3)
+
+# Get commodities with "South Carolina" in the top 3 in the Southeast
+top_3_southeast = get_top_ranked_commodities(southeastern_ranking, 3)
+
+# Get commodities with "South Carolina" in the top 3 in the East
+top_3_eastern = get_top_ranked_commodities(eastern_ranking, 3)
+
+# Print the condensed dataframes
+print("Top 10 Nationally:")
+print(top_10_nationally)
+
+print("\nTop 3 Nationally:")
+print(top_3_nationally)
+
+print("\nTop 3 in the Southeast:")
+print(top_3_southeast)
+
+print("\nTop 3 in the East:")
+print(top_3_eastern)
+
+
+rank_df.to_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\RankedCommodityExports.csv", index=False)
+top_10_nationally.to_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\SCTop10Nationally.csv", index=False)
+top_3_nationally.to_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\SCTop3Nationally.csv", index=False)
+top_3_southeast.to_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\SCTop3Southeast.csv", index=False)
+top_3_eastern.to_csv(r"C:\Users\ebecerra\OneDrive - SC Department of Commerce\Code Files\SCTop3Eastern.csv", index=False)
