@@ -15,7 +15,7 @@ You're now in Data Source Selection.
 
 Step 2: Click on State Export Data (Origin of Movement) HS.
 
-You get prompted the screen where you select States. Manually click on each state, avoid territories and D.C. 
+You get prompted the screen where you select States. Click the green check to select each state, deselect and avoid territories and D.C. 
 
 Step 3: Select the Timeframe
 
@@ -24,7 +24,8 @@ Click on Time, check the box for 2024 (Through November)
 Step 4: Select Commodities
 
 Click on Commodity. 
-Unfortunately, you can't click on All Commodities. That gives you an aggregated sum. Check off on each box 01:99
+Unfortunately, you can't click on All Commodities. That gives you an aggregated sum. If you click the green check, it's going to select ALL the commodities possible, we only need the top level commodities. Check off on each box 01:99
+
 Leave Country and Measure alone. 
 
 Step 5. Download
